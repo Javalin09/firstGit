@@ -1,0 +1,57 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccb.dao.IEmpDao">
+   <!-- Emp列字段
+   empNo,
+   ename,
+   job,
+   mgr,
+   hiredate,
+   sal,
+   comm,
+   deptNo
+    -->
+    <select id="findAllEmp" resultType="com.ccb.entity.Emp">
+        select * from emp
+    </select>
+    <select id="findEmpById" resultType="com.ccb.entity.Emp">
+        select
+        empNo,
+        ename,
+        job,
+        mgr,
+        hiredate,
+        sal,
+        comm,
+        deptNo
+        from emp where EMPNO=#{empNo}
+    </select>
+    <!--select * from (select rownum,ename from emp where rownum &lt;= #{pageNo}*#{pageSize}) where rownum &gt; (#{pageNo}-1)*#{pageSize}-->
+    <select id="findEmpByPage" resultType="com.ccb.entity.Emp">
+        select * from (select e.*,rownum r from emp e  where rownum &lt;= #{pageNo}*#{pageSize}) where r &gt; (#{pageNo}-1)*#{pageSize}
+    </select>
+
+    <insert id="addEmp">
+        insert into Emp values(
+        emp_seq.nextval,
+        #{emp.ename},
+        #{emp.job},
+        #{emp.mgr},
+        sysdate,
+        #{emp.sal},
+        #{emp.comm},
+        #{emp.deptNo})
+    </insert>
+    <delete id="deleEmpByNo">
+        delete from Emp where empno=#{empNo}
+    </delete>
+    <update id="updateSalByNo">
+        update emp set sal=sal+#{money} where empNo=#{empNo}
+    </update>
+    <select id="selectEmp1" resultType="com.ccb.entity.Emp">
+        select * from emp where rownum=1 order by empno desc
+    </select>
+    <select id="findNameLike" resultType="com.ccb.entity.Emp">
+        select * from emp where ename like #{name}
+    </select>
+</mapper>
